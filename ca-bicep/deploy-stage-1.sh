@@ -2,9 +2,9 @@
 
 set -e
 
-RESOURCE_GROUP="ca-kw"
-LOCATION="westeurope"
-ENVIRONMENTNAME="ca-kw"
+RESOURCE_GROUP="ca-test-15"
+LOCATION="canadacentral"
+ENVIRONMENTNAME="ca-test-15"
 
 if [ $(az group exists --name $RESOURCE_GROUP) = false ]; then
     az group create --name $RESOURCE_GROUP --location $LOCATION
@@ -45,10 +45,14 @@ echo $VNET_HUB_ID $SUBNET_HUB_JUMP_ID
 
 az deployment group create --resource-group $RESOURCE_GROUP \
     --template-file privatelink.bicep \
-    --parameters "{\"subnetSpokeId\": {\"value\": \"$SUBNET_SPOKE_JUMP_ID\"},\"subnetHubId\": {\"value\": \"$SUBNET_HUB_JUMP_ID\"},\"loadBalancerFipId\": {\"value\": \"$ILB_FIP_ID\"}}"
+    --parameters "{\"subnetSpokeId\": {\"value\": \"$SUBNET_SPOKE_JUMP_ID\"},\"subnetHubId\": {\"value\": \"$SUBNET_HUB_JUMP_ID\"},\"clusterrg\": {\"value\": \"$CLUSTER_RG\"}}"
 
 PEP_NIC_ID=`az network private-endpoint list -g $RESOURCE_GROUP --query "[?name=='pep-container-app-env'].networkInterfaces[0].id" -o tsv`
-PEP_IP=`az network nic show --ids $PEP_NIC_ID --query ipConfigurations[0].privateIpAddress -o tsv`
+echo 'PEP_NIC_ID' $PEP_NIC_ID
+
+
+PEP_IP=`az network nic show -g $RESOURCE_GROUP --ids $PEP_NIC_ID --query ipConfigurations[0].privateIPAddress -o tsv`
+echo 'PEP_IP' $RESOURCE_GROUP $PEP_NIC_ID $PEP_IP
 
 az deployment group create --resource-group $RESOURCE_GROUP \
     --template-file privatedns.bicep \

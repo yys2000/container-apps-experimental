@@ -4,10 +4,11 @@ param vnetId string
 param logAnalyticsCustomerId string
 param logAnalyticsSharedKey string
 param appInsightsInstrumentationKey string
-
+@description('Subnet resource ID for the Container App environment')
+param infrastructureSubnetId string
 // https://github.com/Azure/azure-rest-api-specs/blob/Microsoft.App-2022-01-01-preview/specification/app/resource-manager/Microsoft.App/preview/2022-01-01-preview/ManagedEnvironments.json
 
-resource environment 'Microsoft.App/managedEnvironments@2022-01-01-preview' = {
+resource environment 'Microsoft.App/managedEnvironments@2023-05-02-preview' = {
   name: environmentName
   location: location
   properties: {
@@ -20,8 +21,8 @@ resource environment 'Microsoft.App/managedEnvironments@2022-01-01-preview' = {
     }
     daprAIInstrumentationKey: appInsightsInstrumentationKey
     vnetConfiguration: {
-      infrastructureSubnetId: '${vnetId}/subnets/cp'
-      runtimeSubnetId: '${vnetId}/subnets/apps'
+      infrastructureSubnetId: infrastructureSubnetId
+      // runtimeSubnetId: '${vnetId}/subnets/apps'
       internal: true
     }
   }

@@ -2,10 +2,10 @@
 
 set -e
 
-RESOURCE_GROUP="ca-kw"
-LOCATION="westeurope"
+RESOURCE_GROUP="ca-test-9"
+LOCATION="westus"
 SUBSCRIPTION=`az account show --query id -o tsv`
-APIMNAME="ca-kw"
+APIMNAME="ca-kw-david"
 APPINSIGHTNAME="appins-ca-kw"
 LOGANALYTICSNAME="logs-ca-kw"
 

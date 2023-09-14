@@ -1,16 +1,24 @@
 param subnetSpokeId string
 param subnetHubId string
-param loadBalancerFipId string
+param clusterrg string
 param location string = resourceGroup().location
 
-resource pl 'Microsoft.Network/privateLinkServices@2021-05-01' = {
+
+
+resource ilb 'Microsoft.Network/loadBalancers@2021-05-01' existing = {
+  name: 'kubernetes-internal'
+  scope: resourceGroup(clusterrg)
+}
+
+
+resource pl 'Microsoft.Network/privateLinkServices@2022-01-01' = {
   name: 'pl-container-app-env'
   location: location
   properties: {
     enableProxyProtocol: false
     loadBalancerFrontendIpConfigurations: [
       {
-        id: loadBalancerFipId
+        id: ilb.properties.frontendIPConfigurations[0].id
       }
     ]
     ipConfigurations: [

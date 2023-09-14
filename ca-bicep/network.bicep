@@ -8,27 +8,31 @@ resource vnetSpoke 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   properties: {
     addressSpace: {
       addressPrefixes: [
-        '10.0.0.0/19'
+        '10.0.0.0/22'
       ]
     }
     subnets: [
       {
-        name: 'cp'
+
+        // Container app subnet
+        name: 'cp' 
         properties: {
-          addressPrefix: '10.0.0.0/21'
+          addressPrefix: '10.0.0.0/23'
         }
       }
+      // Network interface
       {
         name: 'apps'
         properties: {
-          addressPrefix: '10.0.8.0/21'
+          addressPrefix: '10.0.2.0/26'
           privateEndpointNetworkPolicies: 'Disabled'
         }
       }
+      // Jump
       {
         name: 'jump'
         properties: {
-          addressPrefix: '10.0.16.0/24'
+          addressPrefix: '10.0.3.0/26'
           privateEndpointNetworkPolicies: 'Disabled'
           privateLinkServiceNetworkPolicies: 'Disabled'
         }
@@ -99,3 +103,4 @@ output vnetSpokeName string = vnetSpoke.name
 output vnetHubId string = vnetHub.id
 output vnetHubName string = vnetHub.name
 output nsgJumpVmId string = nsgJumpVm.id
+output containerappsSubnetid string = vnetSpoke.properties.subnets[0].id

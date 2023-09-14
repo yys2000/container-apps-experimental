@@ -26,7 +26,7 @@ param envVars array = []
 
 param scaleBy string = 'Http'
 
-resource environment 'Microsoft.App/managedEnvironments@2022-01-01-preview' existing = {
+resource environment 'Microsoft.App/managedEnvironments@2023-05-02-preview' existing = {
   name: environmentName
 }
 
@@ -71,9 +71,9 @@ var scalingRules = {
   }
 }
 
-resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
+resource containerApp 'Microsoft.App/containerApps@2023-05-02-preview' = {
   name: name
-  kind: 'containerapp'
+  // kind: 'containerapp'
   location: location
   properties: {
     managedEnvironmentId: environment.id

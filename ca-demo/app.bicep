@@ -27,7 +27,7 @@ resource redisCache 'Microsoft.Cache/Redis@2019-07-01' existing = {
   name: redisName
 }
 
-resource containerApp 'Microsoft.App/containerApps@2022-01-01-preview' = {
+resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
   name: name
   location: location
   properties: {

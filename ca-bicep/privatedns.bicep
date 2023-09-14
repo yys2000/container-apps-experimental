@@ -20,7 +20,7 @@ resource privateDnsZoneEntry 'Microsoft.Network/privateDnsZones/A@2020-06-01' = 
   }
 }
 
-resource vnetLinkHub 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2018-09-01' = {
+resource vnetLinkHub 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
   name: '${privateDnsZone.name}/${domain}-hub-link'
   location: 'Global'
   properties: {

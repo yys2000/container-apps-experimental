@@ -1,5 +1,6 @@
 param environmentName string = 'env-${resourceGroup().name}'
 param location string = resourceGroup().location
+
 param adminPasswordOrKey string
 
 var deployVm = adminPasswordOrKey != ''
@@ -21,15 +22,35 @@ module logging 'logging.bicep' = {
   }
 }
 
-module environment 'environment.bicep' = {
-  name: 'container-app-environment'
-  params: {
-    environmentName: environmentName
-    location: location
-    vnetId: network.outputs.vnetSpokeId
-    logAnalyticsCustomerId: logging.outputs.logAnalyticsCustomerId
-    logAnalyticsSharedKey: logging.outputs.logAnalyticsSharedKey
-    appInsightsInstrumentationKey: logging.outputs.appInsightsInstrumentationKey
+// module environment 'environment.bicep' = {
+//   name: 'container-app-environment'
+//   params: {
+//     environmentName: environmentName
+//     location: location
+//     vnetId: network.outputs.vnetSpokeId
+//     logAnalyticsCustomerId: logging.outputs.logAnalyticsCustomerId
+//     logAnalyticsSharedKey: logging.outputs.logAnalyticsSharedKey
+//     appInsightsInstrumentationKey: logging.outputs.appInsightsInstrumentationKey
+//   }
+// }
+
+
+// Container Apps Environment
+resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
+  name: environmentName
+  location: location
+  properties: {
+    appLogsConfiguration: {
+      destination: 'log-analytics'
+      logAnalyticsConfiguration: {
+        customerId: logging.outputs.logAnalyticsCustomerId
+        sharedKey: logging.outputs.logAnalyticsSharedKey
+      }
+    }
+    vnetConfiguration: {
+      infrastructureSubnetId: network.outputs.containerappsSubnetid
+      internal: true
+    }
   }
 }
 

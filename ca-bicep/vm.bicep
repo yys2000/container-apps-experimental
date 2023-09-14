@@ -103,7 +103,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2020-06-01' = {
       computerName: vmName
       adminUsername: adminUsername
       adminPassword: adminPasswordOrKey
-      customData: base64(vmCustomData)
+      // customData: base64(vmCustomData)
       linuxConfiguration: any(authenticationType == 'password' ? null : linuxConfiguration)
     }
   }
